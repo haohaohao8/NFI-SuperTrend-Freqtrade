@@ -1,57 +1,154 @@
 {
-  "max_open_trades": 12,
-  "stake_currency": "USDT",
-  "stake_amount": 20,
-  "tradable_balance_ratio": 0.99,
-
-  "dry_run": false,
-  "dry_run_wallet": 10000,
-
-  "exchange": {
-    "name": "binance_futures",
-    "key": "你的API_KEY",
-    "secret": "你的API_SECRET",
-    "ccxt_config": {
-      "enableRateLimit": true
+    // ==========================================================
+    // Freqtrade NFI X7 高频日内配置
+    // ==========================================================
+  
+    "strategy": "NostalgiaForInfinityX7",
+    "strategy_path": "user_data/strategies",
+  
+    "dry_run": false,
+    "dry_run_wallet": 10000,
+    "initial_state": "running",
+    "timeframe": "5m",
+  
+    // ---------------- API 服务器配置（优化登录问题）----------------
+    "api_server": {
+        "enabled": true,
+        "listen_ip_address": "0.0.0.0",
+        "listen_port": 8080,
+        "username": "",
+        "password": "",
+        "jwt_secret_key": "",
+        "ws_token": ""
     },
-    "ccxt_async_config": {
-      "enableRateLimit": true
+  
+    // ---------------- 资金与持仓设置 ----------------
+    "max_open_trades": 15,
+    "stake_currency": "USDT",
+    "stake_amount": 100,
+    "tradable_balance_ratio": 0.99,
+    "fiat_display_currency": "USD",
+    "force_entry_enable": true,
+  
+    // ---------------- 订单超时控制 ----------------
+    "unfilledtimeout": {
+        "entry": 3,
+        "exit": 2,
+        "exit_timeout_count": 0,
+        "unit": "minutes"
     },
-    "pair_whitelist": [
-      "SOL/USDT:USDT", "ADA/USDT:USDT", "AVAX/USDT:USDT", "DOGE/USDT:USDT",
-      "HYPE/USDT:USDT", "XRP/USDT:USDT", "ENA/USDT:USDT", "ARB/USDT:USDT",
-      "APT/USDT:USDT", "LDO/USDT:USDT", "OP/USDT:USDT", "PUMP/USDT:USDT",
-      "SUI/USDT:USDT", "LINK/USDT:USDT", "VIRTUALS/USDT:USDT", "FARTCOIN/USDT:USDT",
-      "JUP/USDT:USDT", "AAVE/USDT:USDT", "ONDO/USDT:USDT", "EIGEN/USDT:USDT",
-      "BIO/USDT:USDT", "DOT/USDT:USDT", "ETH/USDT:USDT", "BTC/USDT:USDT"
-    ]
-  },
-
-  "timeframe": "5m",
-  "strategy": "DualDirectionalDCAFutures",
-
-  "leverage": 3,
-  "margin_mode": "cross",
-  "unlimited_leverage": false,
-
-  "api_server": {
-    "enabled": true,
-    "listen_ip_address": "0.0.0.0",
-    "listen_port": 8080,
-    "verbosity": "info",
-    "enable_openapi": true,
-    "jwt_secret_key": "replace_this_with_a_secret_token"
-  },
-
-  "bot_name": "dual_direction_dca_futures_bot",
-  "initial_state": "running",
-  "forcebuy_enable": true,
-
-  "internals": {
-    "process_throttle_secs": 10
-  },
-
-  "custom_info": {
-    "description": "Dual-direction 3x DCA strategy for Binance Futures"
+  
+    // ---------------- 订单类型设置 ----------------
+    "order_types": {
+        "entry": "limit",
+        "exit": "limit",
+        "emergency_exit": "limit",
+        "force_exit": "limit",
+        "stoploss": "limit",
+        "stoploss_on_exchange": false,
+        "stoploss_on_exchange_interval": 60,
+        "stoploss_on_exchange_limit_ratio": 0.99
+    },
+  
+    // ---------------- 定价策略 ----------------
+    "entry_pricing": {
+        "price_side": "other",
+        "use_order_book": true,
+        "order_book_top": 1,
+        "price_last_balance": 0,
+        "check_depth_of_market": {
+            "enabled": false,
+            "bids_to_ask_delta": 1
+        }
+    },
+  
+    "exit_pricing": {
+        "price_side": "other",
+        "use_order_book": true,
+        "order_book_top": 1,
+        "price_last_balance": 0
+    },
+  
+    // ---------------- 交易所配置 ----------------
+    "exchange": {
+        "name": "binance",
+        "key": "",  // 填入你的API Key
+        "secret": "",  // 填入你的API Secret
+        "ccxt_config": {
+            "enableRateLimit": true,
+            "rateLimit": 60,
+            "options": {
+                "defaultType": "swap"
+            }
+        },
+        "ccxt_async_config": {
+            "enableRateLimit": true,
+            "rateLimit": 60,
+            "options": {
+                "defaultType": "swap"
+            }
+        },
+        "pair_whitelist": [
+            "SOL/USDT:USDT",
+            "ADA/USDT:USDT",
+            "AVAX/USDT:USDT",
+            "DOGE/USDT:USDT",
+            "HYPE/USDT:USDT",
+            "XRP/USDT:USDT",
+            "ENA/USDT:USDT",
+            "ARB/USDT:USDT",
+            "APT/USDT:USDT",
+            "LDO/USDT:USDT",
+            "OP/USDT:USDT",
+            "PUMP/USDT:USDT",
+            "SUI/USDT:USDT",
+            "LINK/USDT:USDT",
+            "VIRTUAL/USDT:USDT",
+            "FARTCOIN/USDT:USDT",
+            "JUP/USDT:USDT",
+            "AAVE/USDT:USDT",
+            "ONDO/USDT:USDT",
+            "EIGEN/USDT:USDT",
+            "DOT/USDT:USDT",
+            "ETH/USDT:USDT",
+            "BTC/USDT:USDT"
+        ]
+    },
+  
+    // ---------------- 内部运行参数 ----------------
+    "internals": {
+        "process_throttle_secs": 25
+    },
+  
+    // ---------------- Pairlist 插件 ----------------
+    "pairlists": [
+        {
+            "method": "StaticPairList"
+        }
+    ],
+  
+    // ==========================================================
+    // NFI 策略参数
+    // ==========================================================
+    "nfi_advanced_mode": true,
+    "nfi_parameters": {
+        "futures_mode_leverage": 3,
+        "stops_enable": true,
+        "derisk_enable": true,
+        "system_v3_stop_threshold_futures_rebuy": 100.0,
+        "system_v3_rebuy_mode_stakes_futures": [1.0, 1.0, 1.0, 1.0],
+        "system_v3_rebuy_mode_thresholds_futures": [-0.025, -0.05, -0.05, -0.05],
+        "rebuy_mode_derisk_futures": -0.60
+    },
+  
+    // ==========================================================
+    // 高频信号扫描与日志输出
+    // ==========================================================
+    "process_only_new_candles": false,
+    "logfile": "freqtrade.log",
+    "verbosity": 0,
+    "logger": {
+        "format": "%(asctime)s - %(levelname)s - %(message)s",
+        "level": "info"
+    }
   }
-}
